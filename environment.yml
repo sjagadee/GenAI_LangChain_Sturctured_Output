@@ -6,6 +6,8 @@ dependencies:
   - python=3.12
   - pip
   - streamlit
+  - pydantic
+  - email-validator
 
 # Generative AI Frameworks
   - langchain
