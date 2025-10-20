@@ -1,5 +1,5 @@
 from langchain_openai import ChatOpenAI
-from typing import TypedDict, Annotated
+from typing import TypedDict, Annotated, Optional, Literal
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -7,10 +7,14 @@ model = ChatOpenAI(temperature=0, model_name="gpt-4o-mini")
 
 #schema
 class Review(TypedDict):
+    key_themes: Annotated[list[str], "Extract key themes from the review as a list of strings."]
     summary: Annotated[str, "A summary of the review."]
-    sentiment: Annotated[str, "The sentiment of the review (positive, negative, neutral)."]
+    sentiment: Annotated[Literal["pos", "neg", "neu"], "The sentiment of the review (positive, negative, neutral)."]
+    pros: Annotated[Optional[list[str]], "List of positives in the review."]
+    cons: Annotated[Optional[list[str]], "List of negatives in the review."]
+    name: Annotated[Optional[str], "The name of the reviewer."]
 
-structured_model =model.with_structured_output(Review)
+structured_model = model.with_structured_output(Review)
 
 review_example = """
 I recently upgraded to the Samsung Galaxy S24 Ultra, and I must say, it’s an absolute powerhouse! The Snapdragon 8 Gen 3 processor makes everything lightning fast—whether I’m gaming, multitasking, or editing photos. The 5000mAh battery easily lasts a full day even with heavy use, and the 45W fast charging is a lifesaver.
@@ -24,8 +28,13 @@ Insanely powerful processor (great for gaming and productivity)
 Stunning 200MP camera with incredible zoom capabilities
 Long battery life with fast charging
 S-Pen support is unique and useful
+
+Cons:
+Some bloatware
+Uncomfortable size and weight for one-handed use
+Expensive compared to other flagship phones
                                  
-Review by Srinivas"""
+Reviewed by Srinivas"""
 result = structured_model.invoke(review_example)
 
 print(result)

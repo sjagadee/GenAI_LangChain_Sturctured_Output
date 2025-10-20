@@ -10,7 +10,7 @@ class Review(TypedDict):
     summary: str
     sentiment: str
 
-structured_model =model.with_structured_output(Review)
+structured_model = model.with_structured_output(Review)
 
 review_example = """The hardware is great, but the software is a little clunky. There are too many apps thate were pre-installed that I cannot remove. Also, UI looks outdated when compared with other brands. Hoping for software updates to fix these issues."""
 
